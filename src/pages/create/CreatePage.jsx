@@ -1,19 +1,28 @@
 import React from "react";
 import styled from "styled-components";
+import Box from "./Box";
 
 function CreatePage() {
   const [m, setM] = React.useState("");
   const [n, setN] = React.useState("");
+  const [grid, setGrid] = React.useState([]);
+  const [show, setShow] = React.useState(false);
 
   const dimension = { m: Number(m), n: Number(n) };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(dimension);
+    setGrid(
+      Array.from({ length: dimension.m }, () => new Array(dimension.n).fill(0))
+    );
   };
 
+  React.useEffect(() => {
+    setShow(true);
+  }, [grid]);
+
   return (
-    <div>
+    <Wrapper>
       <Form onSubmit={handleSubmit}>
         <InputWrapper>
           <Input
@@ -32,11 +41,39 @@ function CreatePage() {
         </InputWrapper>
         <Button>Find Paths</Button>
       </Form>
+
+      {show && <Grid grid={grid} />}
+    </Wrapper>
+  );
+}
+
+// eslint-disable-next-line react/prop-types
+function Grid({ grid }) {
+  return (
+    <div>
+      {
+        // eslint-disable-next-line react/prop-types
+        grid.map((el) => (
+          <RowWrapper key={el}>
+            {el.map((index) => (
+              <Box key={index} />
+            ))}
+          </RowWrapper>
+        ))
+      }
     </div>
   );
 }
 
-const Form = styled.form``;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Form = styled.form`
+  margin: 32px;
+`;
 
 const InputWrapper = styled.div`
   display: flex;
@@ -56,6 +93,10 @@ const Input = styled.input`
 const Button = styled.button`
   display: block;
   margin: auto;
+`;
+
+const RowWrapper = styled.div`
+  display: flex;
 `;
 
 export default CreatePage;
