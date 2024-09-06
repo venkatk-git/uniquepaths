@@ -1,25 +1,19 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Box from "./Box";
 
-function CreatePage() {
-  const [m, setM] = React.useState("");
-  const [n, setN] = React.useState("");
-  const [grid, setGrid] = React.useState([]);
-  const [show, setShow] = React.useState(false);
-
-  const dimension = { m: Number(m), n: Number(n) };
+// eslint-disable-next-line react/prop-types
+function CreatePage({ m, n, setM, setN, dimension, setGrid }) {
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setGrid(
+      // eslint-disable-next-line react/prop-types
       Array.from({ length: dimension.m }, () => new Array(dimension.n).fill(0))
     );
-  };
 
-  React.useEffect(() => {
-    setShow(true);
-  }, [grid]);
+    navigate("/paths");
+  };
 
   return (
     <Wrapper>
@@ -41,27 +35,7 @@ function CreatePage() {
         </InputWrapper>
         <Button>Find Paths</Button>
       </Form>
-
-      {show && <Grid grid={grid} />}
     </Wrapper>
-  );
-}
-
-// eslint-disable-next-line react/prop-types
-function Grid({ grid }) {
-  return (
-    <div>
-      {
-        // eslint-disable-next-line react/prop-types
-        grid.map((el) => (
-          <RowWrapper key={el}>
-            {el.map((index) => (
-              <Box key={index} />
-            ))}
-          </RowWrapper>
-        ))
-      }
-    </div>
   );
 }
 
@@ -93,10 +67,6 @@ const Input = styled.input`
 const Button = styled.button`
   display: block;
   margin: auto;
-`;
-
-const RowWrapper = styled.div`
-  display: flex;
 `;
 
 export default CreatePage;
